@@ -22,7 +22,14 @@ function Login() {
     setPhoneNumber(values.phoneNumber);
 
     try {
+      // Clear any existing reCAPTCHA
+      if (window.recaptchaVerifier) {
+        window.recaptchaVerifier.clear();
+      }
+
+      // Setup new reCAPTCHA
       setupRecaptcha();
+
       const validPhoneNumber = values.phoneNumber.startsWith("+2")
         ? values.phoneNumber
         : `+2${values.phoneNumber}`;
@@ -115,7 +122,7 @@ function Login() {
           loading={loading}
           resetForm={resetForm}
         />
-        <div id="recaptcha-container"></div>
+        <div id="recaptcha-container" className="invisible"></div>
       </div>
     </div>
   );
