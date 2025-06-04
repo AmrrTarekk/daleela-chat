@@ -1,0 +1,58 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Messages collection rules
+    match /messages/{messageId} {
+      // Allow authenticated users to read all messages
+      allow read: if request.auth != null;
+      
+      // Allow authenticated users to create messages only with their own UID
+      allow create: if request.auth != null 
+        && request.auth.uid == request.resource.data.userId
+        && 'text' in request.resource.data
+        && 'userId' in request.resource.data
+        && 'userPhone' in request.resource.data
+        && 'timestamp' in request.resource.data
+        && request.resource.data.text is string
+        && request.resource.data.text.size() > 0
+        && request.resource.data.text.size() <= 1000;
+      
+      // Allow users to delete only their own messages
+      allow delete: if request.auth != null 
+        && request.auth.uid == resource.data.userId;
+      
+      // Prevent updates to maintain message integrity
+      allow update: if false;
+    }
+    
+    // User presence/status collection (optional for online status)
+    match /presence/{userId} {
+      allow read: if request.auth != null && request.auth.uid == userId;
+      allow create, update: if request.auth != null 
+        && request.auth.uid == userId
+        && request.resource.data.keys().hasAll(['online', 'lastSeen'])
+        && request.resource.data.online is bool
+        && request.resource.data.lastSeen is timestamp;
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // User profiles collection (optional for user metadata)
+    match /users/{userId} {
+      allow read: if request.auth != null;
+      allow create, update: if request.auth != null 
+        && request.auth.uid == userId
+        && 'phone' in request.resource.data
+        && 'displayName' in request.resource.data
+        && request.resource.data.phone is string
+        && request.resource.data.displayName is string
+        && request.resource.data.phone.size() > 0
+        && request.resource.data.displayName.size() > 0;
+      allow delete: if request.auth != null && request.auth.uid == userId;
+    }
+    
+    // Block all other documents
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+} 
