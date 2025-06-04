@@ -11,22 +11,21 @@ import Step1 from "./Step1";
 function Login() {
   const [step, setStep] = useState<0 | 1>(0); // 0 for phone input, 1 for code input
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [verificationCode, setVerificationCode] = useState("");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [confirmationResult, setConfirmationResult] =
     useState<ConfirmationResult | null>(null);
 
-  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleLogin = async (values: { phoneNumber: string }) => {
     setError("");
     setLoading(true);
+    setPhoneNumber(values.phoneNumber);
 
     try {
       setupRecaptcha();
-      const validPhoneNumber = phoneNumber.startsWith("+2")
-        ? phoneNumber
-        : `+2${phoneNumber}`;
+      const validPhoneNumber = values.phoneNumber.startsWith("+2")
+        ? values.phoneNumber
+        : `+2${values.phoneNumber}`;
       const confirmationResult = await signInWithPhoneNumber(
         auth,
         validPhoneNumber,
@@ -45,6 +44,7 @@ function Login() {
           "reCAPTCHA verification failed. Please refresh and try again."
         );
       } else {
+        console.log(error);
         setError("An error occurred. Please try again.");
       }
     } finally {
@@ -52,8 +52,7 @@ function Login() {
     }
   };
 
-  const handleVerification = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
+  const handleVerification = async (values: { verificationCode: string }) => {
     setError("");
     setLoading(true);
     try {
@@ -62,7 +61,7 @@ function Login() {
         return;
       }
 
-      const result = await confirmationResult.confirm(verificationCode);
+      const result = await confirmationResult.confirm(values.verificationCode);
       const user = result.user;
 
       await createOrUpdateUserProfile(user, {
@@ -82,7 +81,6 @@ function Login() {
 
   const resetForm = () => {
     setPhoneNumber("");
-    setVerificationCode("");
     setConfirmationResult(null);
     setStep(0);
     setError("");
@@ -105,8 +103,6 @@ function Login() {
         <Step0
           step={step}
           handleLogin={handleLogin}
-          phoneNumber={phoneNumber}
-          setPhoneNumber={setPhoneNumber}
           error={error}
           loading={loading}
         />
@@ -114,8 +110,6 @@ function Login() {
         <Step1
           step={step}
           handleVerification={handleVerification}
-          verificationCode={verificationCode}
-          setVerificationCode={setVerificationCode}
           phoneNumber={phoneNumber}
           error={error}
           loading={loading}

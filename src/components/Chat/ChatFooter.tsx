@@ -30,14 +30,14 @@ function ChatFooter() {
   };
 
   return (
-    <div className="bg-white border-t p-4 rounded-b-[20px]">
+    <div className="bg-white border-t p-4 rounded-b-[20px] ">
       <form onSubmit={handleSendMessage} className="flex space-x-3">
         <input
           type="text"
           value={addedMessage}
           onChange={(e) => setAddedMessage(e.target.value)}
           placeholder="Type your message..."
-          className="flex-1 px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-black"
+          className="w-full flex-1 px-4 py-2 border border-gray-300 rounded-full focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-black"
           disabled={loading}
         />
         <button
@@ -46,7 +46,6 @@ function ChatFooter() {
           className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-6 py-2 rounded-full flex items-center space-x-2 transition-colors"
         >
           <Send className="w-4 h-4" />
-          <span className="hidden sm:block">Send</span>
         </button>
       </form>
     </div>

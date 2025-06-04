@@ -13,13 +13,16 @@
     "dev:emulators": "concurrently \"npm run firebase:emulators\" \"npm run dev\""
   },
   "dependencies": {
+    "@types/yup": "^0.32.0",
     "date-fns": "^4.1.0",
     "firebase": "^11.8.1",
+    "formik": "^2.4.6",
     "lucide-react": "^0.512.0",
     "next": "15.3.3",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "react-firebase-hooks": "^5.1.1"
+    "react-firebase-hooks": "^5.1.1",
+    "yup": "^1.6.1"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
