@@ -44,6 +44,10 @@ function Step0({
         <p className="text-xs text-gray-500 mt-1">
           Enter your Egyptian phone number
         </p>
+        <p className="text-xs text-gray-500 mt-1">
+          (01222841166 or 01222841165)
+        </p>
+        <p className="text-xs text-gray-500 mt-1">(123456 or 654321)</p>
       </div>
 
       {error && (

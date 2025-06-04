@@ -1,36 +1,95 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Daleela Chat
+
+A modern chat application built with Next.js and Firebase.
+
+## Prerequisites
+
+- Node.js (v18 or higher)
+- npm or yarn
+- Firebase CLI (`npm install -g firebase-tools`)
 
 ## Getting Started
 
-First, run the development server:
+1. Clone the repository:
+
+```bash
+git clone [your-repository-url]
+cd daleela-chat
+```
+
+2. Install dependencies:
+
+```bash
+npm install
+# or
+yarn install
+```
+
+3. Set up Firebase:
+
+   - Create a new Firebase project at [Firebase Console](https://console.firebase.google.com)
+   - Enable Authentication and Firestore
+   - Copy your Firebase configuration
+
+4. Create a `.env.local` file in the root directory with your Firebase configuration:
+
+```env
+# Firebase Configuration
+NEXT_PUBLIC_FIREBASE_API_KEY=AIzaSyA9meNgd4dNWB91WBne2V0UeCIlgXxmbTU
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=fir-daleela.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=fir-daleela
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=fir-daleela.firebasestorage.app
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=59388327197
+NEXT_PUBLIC_FIREBASE_APP_ID=1:59388327197:web:2c2259e79482ca5d9a1df4
+```
+
+5. Run the development server:
 
 ```bash
 npm run dev
 # or
 yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project Structure
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```
+daleela-chat/
+├── src/              # Source files
+├── public/           # Static files
+├── functions/        # Firebase Cloud Functions
+├── .next/           # Next.js build output
+└── ...
+```
 
-## Learn More
+## Available Scripts
 
-To learn more about Next.js, take a look at the following resources:
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm run start` - Start production server
+- `npm run lint` - Run ESLint
+- `npm run deploy` - Deploy to Firebase
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Firebase Configuration
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+The project uses the following Firebase services:
 
-## Deploy on Vercel
+- Authentication
+- Firestore Database
+- Cloud Functions
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+Make sure to set up the appropriate security rules in your Firebase Console.
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Contributing
+
+1. Fork the repository
+2. Create your feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add some amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## License
+
+This project is licensed under the MIT License - see the LICENSE file for details.
