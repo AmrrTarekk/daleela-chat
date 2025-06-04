@@ -1,7 +1,7 @@
 import { Loader2 } from "lucide-react";
 import React from "react";
 import { Formik, Form, Field } from "formik";
-import * as Yup from "yup";
+import { validationStep1 } from "./schema";
 
 type Step1Props = {
   step: number;
@@ -11,12 +11,6 @@ type Step1Props = {
   loading: boolean;
   resetForm: () => void;
 };
-
-const validationSchema = Yup.object().shape({
-  verificationCode: Yup.string()
-    .required("Verification code is required")
-    .matches(/^\d{6}$/, "Verification code must be exactly 6 digits"),
-});
 
 function Step1({
   step,
@@ -35,7 +29,7 @@ function Step1({
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={validationSchema}
+      validationSchema={validationStep1}
       onSubmit={handleVerification}
     >
       {({ errors, touched, values, setFieldValue }) => (

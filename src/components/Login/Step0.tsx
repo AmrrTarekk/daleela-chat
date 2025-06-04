@@ -1,7 +1,7 @@
 import { Loader2, Phone } from "lucide-react";
 import React from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
-import * as Yup from "yup";
+import { validationStep0 } from "./schema";
 
 type Step0Props = {
   step: number;
@@ -9,15 +9,6 @@ type Step0Props = {
   error: string;
   loading: boolean;
 };
-
-const validationSchema = Yup.object().shape({
-  phoneNumber: Yup.string()
-    .matches(
-      /^(\+20|0)?1[0125][0-9]{8}$/,
-      "Please enter a valid Egyptian phone number"
-    )
-    .required("Phone number is required"),
-});
 
 function Step0({ step, handleLogin, error, loading }: Step0Props) {
   if (step !== 0) return null;
@@ -29,7 +20,7 @@ function Step0({ step, handleLogin, error, loading }: Step0Props) {
   return (
     <Formik
       initialValues={initialValues}
-      validationSchema={validationSchema}
+      validationSchema={validationStep0}
       onSubmit={(values) => handleLogin(values)}
     >
       {({ errors, touched, handleChange }) => (
