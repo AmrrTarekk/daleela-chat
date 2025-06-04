@@ -21,12 +21,11 @@ function Login() {
     setLoading(true);
     setPhoneNumber(values.phoneNumber);
 
+    // Clear any existing reCAPTCHA
+    if (window.recaptchaVerifier) {
+      window.recaptchaVerifier.clear();
+    }
     try {
-      // Clear any existing reCAPTCHA
-      if (window.recaptchaVerifier) {
-        window.recaptchaVerifier.clear();
-      }
-
       // Setup new reCAPTCHA
       setupRecaptcha();
 
