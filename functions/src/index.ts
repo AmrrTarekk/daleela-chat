@@ -1,5 +1,5 @@
-import * as functions from "firebase-functions/v1";
-import * as admin from "firebase-admin";
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
 
 // Initialize Firebase Admin SDK
 admin.initializeApp();
@@ -8,7 +8,7 @@ const db = admin.firestore();
 
 exports.onCreateUserDocument = functions.auth
   .user()
-  .onCreate(async (user: admin.auth.UserRecord) => {
+  .onCreate(async (user: any) => {
     try {
       const userDocRef = db.collection("users").doc(user.uid);
       const existingDoc = await userDocRef.get();
@@ -42,7 +42,7 @@ exports.onCreateUserDocument = functions.auth
 
 exports.onDeleteUserDocument = functions.auth
   .user()
-  .onDelete(async (user: admin.auth.UserRecord) => {
+  .onDelete(async (user: any) => {
     try {
       const userDocRef = db.collection("users").doc(user.uid);
       await userDocRef.delete();
@@ -56,38 +56,40 @@ exports.onDeleteUserDocument = functions.auth
     }
   });
 
-exports.updateUserStatus = functions.https.onCall(async (data, context) => {
-  try {
-    if (!context.auth) {
+exports.updateUserStatus = functions.https.onCall(
+  async (data: any, context: any) => {
+    try {
+      if (!context.auth) {
+        throw new functions.https.HttpsError(
+          "unauthenticated",
+          "User must be authenticated"
+        );
+      }
+
+      const userId = context.auth.uid;
+      const isOnline = data.isOnline || false;
+
+      await db.collection("users").doc(userId).update({
+        isOnline: isOnline,
+        lastActive: admin.firestore.FieldValue.serverTimestamp(),
+      });
+
+      console.log(`The user ${userId} is ${isOnline ? "online" : "offline"}`);
+
+      return { success: true };
+    } catch (error) {
+      console.error("Error updating user status:", error);
       throw new functions.https.HttpsError(
-        "unauthenticated",
-        "User must be authenticated"
+        "internal",
+        "Failed to update user status"
       );
     }
-
-    const userId = context.auth.uid;
-    const isOnline = data.isOnline || false;
-
-    await db.collection("users").doc(userId).update({
-      isOnline: isOnline,
-      lastActive: admin.firestore.FieldValue.serverTimestamp(),
-    });
-
-    console.log(`The user ${userId} is ${isOnline ? "online" : "offline"}`);
-
-    return { success: true };
-  } catch (error) {
-    console.error("Error updating user status:", error);
-    throw new functions.https.HttpsError(
-      "internal",
-      "Failed to update user status"
-    );
   }
-});
+);
 
 exports.onMessageCreate = functions.firestore
   .document("messages/{messageId}")
-  .onCreate(async (snapshot) => {
+  .onCreate(async (snapshot: any) => {
     try {
       const message = snapshot.data();
 
@@ -105,10 +107,10 @@ exports.onMessageCreate = functions.firestore
       }
 
       const usersToNotify = usersSnapshot.docs
-        .map((doc) => doc.data())
-        .filter((user) => user.uid !== message.userId);
+        .map((doc: any) => doc.data())
+        .filter((user: any) => user.uid !== message.userId);
 
-      usersToNotify.forEach((user) => {
+      usersToNotify.forEach((user: any) => {
         const displayName =
           user.displayName || user.phoneNumber || user.email || "Unknown User";
         console.log(`Notification sent to ${displayName} with id ${user.uid}`);
@@ -124,7 +126,7 @@ exports.onMessageCreate = functions.firestore
 
 exports.copyMessageToUsers = functions.firestore
   .document("messages/{messageId}")
-  .onCreate(async (snap, context) => {
+  .onCreate(async (snap: any, context: any) => {
     try {
       const messageData = snap.data();
       const messageId = context.params.messageId;
@@ -143,7 +145,7 @@ exports.copyMessageToUsers = functions.firestore
         return;
       }
 
-      const allUsers = usersSnapshot.docs.map((doc) => doc.data());
+      const allUsers = usersSnapshot.docs.map((doc: any) => doc.data());
 
       // Use batch processing for better scalability
       const batchSize = 100; // Reasonable batch size for Promise.all
@@ -151,7 +153,7 @@ exports.copyMessageToUsers = functions.firestore
 
       for (let i = 0; i < allUsers.length; i += batchSize) {
         const batch = allUsers.slice(i, i + batchSize);
-        const batchPromises = batch.map((user) => {
+        const batchPromises = batch.map((user: any) => {
           return db
             .collection("users")
             .doc(user.uid)
