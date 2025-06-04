@@ -21,13 +21,9 @@ function Login() {
     setLoading(true);
     setPhoneNumber(values.phoneNumber);
 
-    // Clear any existing reCAPTCHA
-    if (window.recaptchaVerifier) {
-      window.recaptchaVerifier.clear();
-    }
     try {
       // Setup new reCAPTCHA
-      setupRecaptcha();
+      const recaptchaVerifier = setupRecaptcha();
 
       const validPhoneNumber = values.phoneNumber.startsWith("+2")
         ? values.phoneNumber
@@ -35,7 +31,7 @@ function Login() {
       const confirmationResult = await signInWithPhoneNumber(
         auth,
         validPhoneNumber,
-        window.recaptchaVerifier
+        recaptchaVerifier
       );
       setConfirmationResult(confirmationResult);
       setStep(1);
