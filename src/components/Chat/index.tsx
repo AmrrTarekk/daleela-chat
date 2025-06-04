@@ -5,7 +5,7 @@ import ChatFooter from "./ChatFooter";
 
 function Chat() {
   return (
-    <div className="flex flex-col h-screen bg-gray-50 mx-[10vw] border-2 border-blue-500 rounded-[20px]">
+    <div className="flex flex-col h-screen bg-gray-50 mx-[2vw] md:mx-[10vw] border-2 border-blue-500 rounded-[20px]">
       <ChatHeader />
 
       <ChatBody />
